@@ -56,7 +56,7 @@ modMusic.prototype.parseProTracker = function(arrayBuffer) {
   for(i=0; i < this.numSamples; i++) {
     this.inst[i] = ds.readStruct(this.proTrackerInstStruct);
   }
-  if(this.numSamples = 31) {
+  if(this.numSamples == 31) {
     this.song = ds.readStruct(this.proTrackerSongStruct32);
   }
   else {
@@ -73,7 +73,7 @@ modMusic.prototype.parseProTracker = function(arrayBuffer) {
   //read in pattern data
   for(i=0; i < this.numPatterns; i++) {
     this.patterns[i] = [];
-    for(j=0; j < 1024; j++) { //1024 entries per pattern
+    for(j=0; j < 64; j++) { //64 entries per pattern
       this.patterns[i][j] = _parseProTrackerPattern(ds.readUint8Array(4).buffer);
     }
   }
@@ -86,6 +86,8 @@ modMusic.prototype.parseProTracker = function(arrayBuffer) {
     console.log("Reading sample from 0x" + ds.position.toString(16) + " with length of " + this.inst[i].sampleLength.toString() + " bytes");
     this.samples[i] = ds.readInt8Array(this.inst[i].sampleLength)
   }
+
+
 }
 
 function _parseProTrackerPattern(arrayBuffer) {
