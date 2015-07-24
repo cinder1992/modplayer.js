@@ -62,7 +62,7 @@ modMusic.prototype.parseProTracker = function(arrayBuffer) {
   else {
     this.song = ds.readStruct(this.proTrackerSongStruct);
   }
-
+  console.log("Successfully found pattern data start at 0x" + ds.position.toString(16));
   //get total number of patterns
   for(i=0; i < 128; i++) {
     if(this.song.songTable[i] > this.numPatterns) {
@@ -71,10 +71,17 @@ modMusic.prototype.parseProTracker = function(arrayBuffer) {
   }
   
   //read in pattern data
-  for(i=0; i < this.numPatterns; i++) {
+  for(i=0; i <= this.numPatterns; i++) {
     this.patterns[i] = [];
+    this.patterns[i][0] = [];
+    this.patterns[i][1] = [];
+    this.patterns[i][2] = [];
+    this.patterns[i][3] = [];
     for(j=0; j < 64; j++) { //64 entries per pattern
-      this.patterns[i][j] = _parseProTrackerPattern(ds.readUint8Array(4).buffer);
+      this.patterns[i][0][j] = _parseProTrackerPattern(ds.readUint8Array(4).buffer);
+      this.patterns[i][1][j] = _parseProTrackerPattern(ds.readUint8Array(4).buffer);
+      this.patterns[i][2][j] = _parseProTrackerPattern(ds.readUint8Array(4).buffer);
+      this.patterns[i][3][j] = _parseProTrackerPattern(ds.readUint8Array(4).buffer);
     }
   }
 
@@ -83,8 +90,8 @@ modMusic.prototype.parseProTracker = function(arrayBuffer) {
 
   //read in sample data
   for(i=0; i < this.numSamples; i++) {
-    console.log("Reading sample from 0x" + ds.position.toString(16) + " with length of " + this.inst[i].sampleLength.toString() + " bytes");
-    this.samples[i] = ds.readInt8Array(this.inst[i].sampleLength)
+    console.log("Reading sample from 0x" + ds.position.toString(16) + " with length of " + (this.inst[i].sampleLength*2).toString() + " bytes and repeat length of " + (this.inst[i].repeatSize*2).toString());
+    this.samples[i] = ds.readInt8Array(this.inst[i].sampleLength*2);
   }
 
 
@@ -108,3 +115,18 @@ function _parseProTrackerPattern(arrayBuffer) {
   return pattern;
 }
 
+function _initAudioSystem {
+  var contextClass = (window.AudioContext || 
+    window.webkitAudioContext || 
+    window.mozAudioContext || 
+    window.oAudioContext || 
+    window.msAudioContext);
+  if (contextClass) {
+    var context = new contextClass();
+  } else {
+    alert("Your browser does not support WebAudio! Please update your browser.");
+    throw new error("No Support for WebAudio!");
+  }
+
+
+}
