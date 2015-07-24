@@ -78,8 +78,12 @@ modMusic.prototype.parseProTracker = function(arrayBuffer) {
     }
   }
 
+  //spit out debug info
+  console.log("Successfully parsed " + this.numPatterns + " patterns with " + this.numSamples + " samples");
+
   //read in sample data
   for(i=0; i < this.numSamples; i++) {
+    console.log("Reading sample from 0x" + ds.position.toString(16) + " with length of " + this.inst[i].sampleLength.toString() + " bytes");
     this.samples[i] = ds.readInt8Array(this.inst[i].sampleLength)
   }
 }
