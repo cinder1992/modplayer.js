@@ -32,7 +32,7 @@ modMusic.prototype.state = 0;
 modMusic.prototype.modName = "None";
 modMusic.prototype.play = function() {alert("No file Loaded!")};
 modMusic.prototype.parseMod = function(arrayBuffer, type) {
-  if (type == "audio/x-mod") { this.parseProTracker(arrayBuffer) }
+  //if (type == "audio/x-mod") { this.parseProTracker(arrayBuffer) }
   //else { alert("Invalid Modfile!") };
   this.parseProTracker(arrayBuffer);
 };
