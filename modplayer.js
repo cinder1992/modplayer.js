@@ -33,7 +33,8 @@ modMusic.prototype.modName = "None";
 modMusic.prototype.play = function() {alert("No file Loaded!")};
 modMusic.prototype.parseMod = function(arrayBuffer, type) {
   if (type == "audio/x-mod") { this.parseProTracker(arrayBuffer) }
-  else { alert("Invalid Modfile!") };
+  //else { alert("Invalid Modfile!") };
+  this.parseProTracker(arrayBuffer);
 };
 
 //Parse ProTracker Modules
