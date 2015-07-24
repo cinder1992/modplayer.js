@@ -1,0 +1,6 @@
+[submodule "DataStream.js"]
+	path = DataStream.js
+	url = https://github.com/kig/DataStream.js.git
+[submodule "bitview.js"]
+	path = bitview.js
+	url = https://github.com/kig/bitview.js.git

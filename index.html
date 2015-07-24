@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<head>
+  <script src="DataStream.js/encoding.js"></script>
+  <script src="DataStream.js/encoding-indexes.js"></script>
+  <script src="DataStream.js/DataStream.js"></script>
+  <script src="bitview.js/bitview.js"></script>
+  <script src="modplayer.js"></script>
+  <script>
+  var modFile = new modMusic();
+  function handleFileInput(evn) {
+    var file = evn.target.files[0];
+    var reader = new FileReader();
+
+    reader.onload = function(evt) {
+      console.log(file.type);
+      modFile.parseMod(evt.target.result, file.type);
+    };
+    reader.readAsArrayBuffer(file);
+  };
+  window.onload = function() {document.getElementById('files').addEventListener('change', handleFileInput, false);}
+  </script>
+  <meta charset="UTF-8">
+</head>
+<body>
+  <input type="file" id="files" name="files" />
+  <button type="button"  onclick="modFile.play()">Play</button><br />
+  <div id='stuff'> </div>
+</body>
