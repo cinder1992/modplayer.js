@@ -25,6 +25,7 @@ proTracker.prototype.inst = [];
 proTracker.prototype.song = [];
 proTracker.prototype.patterns = [];
 proTracker.prototype.samples = [];
+proTracker.prototype.WAsamples = [];
 proTracker.prototype.numPatterns = 0;
 proTracker.prototype.numSamples = 15; //15 by default
 
@@ -103,5 +104,40 @@ proTracker.prototype.parseFile = function(arrayBuffer, parent) {
     console.log("Reading sample from 0x" + ds.position.toString(16) + " with length of " + (this.inst[i].sampleLength*2).toString() + " bytes and repeat length of " + (this.inst[i].repeatSize*2).toString());
     this.samples[i] = ds.readInt8Array(this.inst[i].sampleLength*2);
   }
+  
+  //normalise sample data to WebAudio spec (-1,1 instead of -127,127), converting to standard array in the process.
+  for(i=0; i < this.samples.length; i++) {
+    var temp = [];
+    for(j=0; j < this.samples[i].length; j++) {
+      temp[j] = this.samples[i][j] / 127;
+    }
+    this.samples[i] = temp;
+  } 
+  
+  //Remove the leading 4 bytes of the sample, which would normally be used for storing loop data in RAM, but are unneeded.
+  //also prune any empty arrays
+  for(i=0; i < this.samples.length; i++) {
+    if(this.samples[i].length >= 4) {
+      this.samples[i].shift();
+      this.samples[i].shift();
+      this.samples[i].shift();
+      this.samples[i].shift();
+    }
+  }
+}
 
+//sample test player
+function testPlay() {
+  var audioCtx = modFile.context;
+  console.log(modFile.proTracker.samples[sampleSel].length)
+  var sampleBuffer = audioCtx.createBuffer(1, modFile.proTracker.samples[sampleSel].length, 8287); //1hz sample rate to "cheat" and reduce calculation of playback rate
+  var buffering = sampleBuffer.getChannelData(0);
+  for(i=0; i < modFile.proTracker.samples[sampleSel].length; i++) {
+    buffering[i] = modFile.proTracker.samples[sampleSel][i];
+  }
+  modFile.proTracker.WAsamples[sampleSel] = sampleBuffer;
+  var source = audioCtx.createBufferSource();
+  source.buffer = sampleBuffer;
+  source.connect(audioCtx.destination);
+  source.start(0);
 }

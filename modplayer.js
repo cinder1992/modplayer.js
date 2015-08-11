@@ -6,10 +6,13 @@ modMusic.prototype.modName = "None";
 modMusic.prototype.modType = "Unknown";
 modMusic.prototype.play = function() {alert("No file Loaded!")};
 modMusic.prototype.proTracker = new proTracker();
+modMusic.prototype.context = "";
 
 modMusic.prototype.parseMod = function(arrayBuffer, type) { //TODO: replace with proper file validation
   this.modType = "ProTracker";
   this.proTracker.parseFile(arrayBuffer, this);
+  this.context = this.initAudioSystem();
+  this.play = testPlay;
 };
 
 modMusic.prototype.initAudioSystem = function() {
@@ -24,5 +27,6 @@ modMusic.prototype.initAudioSystem = function() {
     alert("Your browser does not support WebAudio! Please update your browser.");
     throw new error("No Support for WebAudio!");
   }
-  return contextClass;
+  return new contextClass;
 }
+var sampleSel = 0;
