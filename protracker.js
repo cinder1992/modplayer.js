@@ -109,21 +109,11 @@ proTracker.prototype.parseFile = function(arrayBuffer, parent) {
   for(i=0; i < this.samples.length; i++) {
     var temp = [];
     for(j=0; j < this.samples[i].length; j++) {
-      temp[j] = this.samples[i][j] / 127;
+      //Remove the leading 4 bytes of the sample, which would normally be used for storing loop data in RAM, but are unneeded.
+      temp[j] = this.samples[i][j+3] / 127;
     }
     this.samples[i] = temp;
   } 
-  
-  //Remove the leading 4 bytes of the sample, which would normally be used for storing loop data in RAM, but are unneeded.
-  //also prune any empty arrays
-  for(i=0; i < this.samples.length; i++) {
-    if(this.samples[i].length >= 4) {
-      this.samples[i].shift();
-      this.samples[i].shift();
-      this.samples[i].shift();
-      this.samples[i].shift();
-    }
-  }
 }
 
 //sample test player
